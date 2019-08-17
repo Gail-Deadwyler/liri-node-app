@@ -4,9 +4,13 @@ require('dotenv').config()
 // Using the require keyword lets us access all of the exports in the keys.js file
 var keys = require("./keys.js");
 
+const Spotify = require("node-spotify-api");
+
+var spotify = new Spotify(keys.spotify);
+
 var action = process.argv[2];
 //console.log("action is" + typeof action);
-var movieName = process.argv[3];
+var input = process.argv[3];
 //let value = process.argv[3];
 
 /* include axios npm package */
@@ -36,10 +40,8 @@ switch (action) {
     
     //If movie() is called...
     function movie() {
-
-        /* if no movie title given.. display info for Mr Nobody */
-                
-        if (!movieName) {
+        /* if no movie title given.. display info for Mr Nobody */                
+        if (!input) {
             var queryUrl = "http://www.omdbapi.com/?t=mr+nobody&y=&plot=short&apikey=trilogy";
             //movieName = "Mr Nobody";            
             //var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
@@ -82,16 +84,12 @@ switch (action) {
         } //end if statement
         
         else {
-            /* Then run a request with axios to the OMDB API with the movie specified */
-        //var movieName = process.argv[3];
-        var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+            /* Then run a request with axios to the OMDB API with the movie specified */        
+        var queryUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=trilogy";
 
-        console.log(queryUrl);
-        console.log('!!movie name is: ' + movieName);
+        console.log(queryUrl);        
 
-        // console.log("moviename: " + movieName);
-
-         axios
+        axios
         .get(queryUrl)
         .then(function(response) {            
             console.log(`Title of movie: ${response.data.Title}
@@ -125,6 +123,48 @@ switch (action) {
         });
         } //end else statement
     } //function end
+
+    /* If concert function is called */
+    function concert() {
+
+      var queryUrl = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp";
+      console.log(queryUrl);
+
+      axios
+      .get(queryUrl)
+      .then(function(response){        
+
+        let bands = response.data;        
+
+        for(let band of bands) {
+          console.log(`Name of the venue: ${band.venue.name}
+          Venue location: ${band.venue.city}, ${band.venue.country}
+          Date of event: ${moment(band.venue.datetime).format("L")}`);
+        }
+
+      })
+    }
+
+    /* If concert function is called */
+    function song() {
+
+      if(!input) {
+
+        input = "The Sign Ace of Base";
+      }
+      spotify.search({type: "track", query: input}, function(err, data){
+        if (err)
+          console.log("Error");
+        var tracks = data.tracks.items;
+        console.log(tracks[0].artists[0].name);
+        console.log(tracks[0].name);
+        console.log(tracks[0].preview_url);
+        console.log(tracks[0].album.name);
+      });
+
+
+    
+    }
 
             
 
