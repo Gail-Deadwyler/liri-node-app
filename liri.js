@@ -1,17 +1,26 @@
-//npm package loads my API key and adds to process.env object
-require('dotenv').config()
+/**
+ * Programming assignment:  LIRI Bot
+ * Developer:               Gail Deadwyler
+ * Date Written:            8/19/19
+ * Purpose:                 LIRI (_Language_ Interpretation and Recognition Interface) is a command line node app  
+ *                          that takes in parameters and gives you back data.
+ */
 
-// Using the require keyword lets us access all of the exports in the keys.js file
+
+/* npm package loads my API key and adds to process.env object */
+require("dotenv").config();
+
+/* Using the require keyword - access all of the exports in the keys.js file */
 var keys = require("./keys.js");
 
-const Spotify = require("node-spotify-api");
+var Spotify = require("node-spotify-api");
 
 var spotify = new Spotify(keys.spotify);
 
+console.log(spotify);
+
 var action = process.argv[2];
-//console.log("action is" + typeof action);
 var input = process.argv[3];
-//let value = process.argv[3];
 
 /* include axios npm package */
 var axios = require("axios");
@@ -19,18 +28,21 @@ var axios = require("axios");
 /* include moment npm package */
 var moment = require("moment");
 
-// The switch-case will direct which function gets run.
+/* include fs package for reading and writing files */
+var fs = require("fs");
+
+/* The switch-case will direct which function gets run */
 switch (action) {
     case "movie-this":
-      movie();
+      movie(input);
       break;
     
     case "concert-this":
-      concert();
+      concert(input);
       break;
     
     case "spotify-this-song":
-      song();
+      song(input);
       break;
     
     case "do-what-it-says":
@@ -38,15 +50,16 @@ switch (action) {
       break;
     }
     
-    //If movie() is called...
-    function movie() {
-        /* if no movie title given.. display info for Mr Nobody */                
+    /* If movie() is called... */
+    function movie(movie) {
+      input = movie;
+        var queryUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=trilogy";                
+        
+        /* if no movie title given.. display info for Mr Nobody */
         if (!input) {
-            var queryUrl = "http://www.omdbapi.com/?t=mr+nobody&y=&plot=short&apikey=trilogy";
-            //movieName = "Mr Nobody";            
-            //var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
-
-            console.log(queryUrl);
+            //var queryUrl = "http://www.omdbapi.com/?t=mr+nobody&y=&plot=short&apikey=trilogy";
+            input = "Mr Nobody";            
+            queryUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=trilogy";
 
             axios
             .get(queryUrl)
@@ -62,9 +75,9 @@ switch (action) {
             Actors in the movie: ${response.data.Actors}`);            
         })
         .catch(function(error) {
-            if (error.response)     {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
+            if (error.response) {
+            /* The request was made and the server responded with a status code */
+            /* that falls out of the range of 2xx */
             console.log("---------------Data---------------");
             console.log(error.response.data);
             console.log("---------------Status---------------");
@@ -72,27 +85,24 @@ switch (action) {
             console.log("---------------Status---------------");
             console.log(error.response.headers);
             } else if (error.request) {
-            // The request was made but no response was received
-            // `error.request` is an object that comes back with details pertaining to the error that occurred.
+            /* The request was made but no response was received */
+            /* `error.request` is an object that comes back with details pertaining to the error that occurred */
             console.log(error.request);
             } else {
-            // Something happened in setting up the request that triggered an Error
+            /* Something happened in setting up the request that triggered an Error */
             console.log("Error", error.message);
             }
             console.log(error.config);
         });
-        } //end if statement
+        } /* end if statement */        
         
-        else {
-            /* Then run a request with axios to the OMDB API with the movie specified */        
+        /* Then run a request with axios to the OMDB API with the movie specified */        
         var queryUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=trilogy";
-
-        console.log(queryUrl);        
 
         axios
         .get(queryUrl)
         .then(function(response) {            
-            console.log(`Title of movie: ${response.data.Title}
+            return console.log(`Title of movie: ${response.data.Title}
             Year the movie came out: ${response.data.Year}
             IMDB Rating of the movie: ${response.data.imdbRating} 
             Rotten Tomatoes Rating of the movie: ${response.data.Ratings[1].Value}
@@ -103,8 +113,8 @@ switch (action) {
         })
         .catch(function(error) {
             if (error.response)     {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
+            /* The request was made and the server responded with a status code */
+            /* that falls out of the range of 2xx */
             console.log("---------------Data---------------");
             console.log(error.response.data);
             console.log("---------------Status---------------");
@@ -112,27 +122,26 @@ switch (action) {
             console.log("---------------Status---------------");
             console.log(error.response.headers);
             } else if (error.request) {
-            // The request was made but no response was received
-            // `error.request` is an object that comes back with details pertaining to the error that occurred.
+            /*  The request was made but no response was received */
+            /* `error.request` is an object that comes back with details pertaining to the error that occurred.*/
             console.log(error.request);
             } else {
-            // Something happened in setting up the request that triggered an Error
+            /* Something happened in setting up the request that triggered an Error */
             console.log("Error", error.message);
             }
             console.log(error.config);
-        });
-        } //end else statement
-    } //function end
+        });        
+    } /* function end 
 
-    /* If concert function is called */
-    function concert() {
+    /* If concert() is called */
+    function concert(artist) {
+      input = artist;
 
       var queryUrl = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp";
-      console.log(queryUrl);
 
       axios
       .get(queryUrl)
-      .then(function(response){        
+      .then(function(response) {
 
         let bands = response.data;        
 
@@ -141,45 +150,49 @@ switch (action) {
           Venue location: ${band.venue.city}, ${band.venue.country}
           Date of event: ${moment(band.venue.datetime).format("L")}`);
         }
-
       })
-    }
+    } /* function end
 
-    /* If concert function is called */
-    function song() {
-
+    /* If song() is called */
+    function song(song) {
+      input = song;
+      /* if no song is given, default is Ace of Base */
       if(!input) {
 
         input = "The Sign Ace of Base";
       }
-      spotify.search({type: "track", query: input}, function(err, data){
-        if (err)
-          console.log("Error");
-        var tracks = data.tracks.items;
-        console.log(tracks[0].artists[0].name);
-        console.log(tracks[0].name);
-        console.log(tracks[0].preview_url);
-        console.log(tracks[0].album.name);
+      spotify
+      .search({type: "track", query: input}) 
+      .then(function(response) {
+
+        //console.log(JSON.stringify(response));
+
+        var tracks = response.tracks.items;
+        console.log(`Artist: ${tracks[0].artists[0].name}
+        Song Title: ${tracks[0].name}
+        Preview URL: ${tracks[0].preview_url}
+        Album Name: ${tracks[0].album.name}`); 
+      })
+      .catch(function(err) {
+        console.log(err);
+      });         
+    } /* function end
+
+    /* If simon() is called */
+    function simon() {
+      fs.readFile("random.txt", "utf8", function(error, data) {
+        /* If the code experiences any errors it will log the error to the console. */
+        if (error) {
+          return console.log(error);
+        }      
+        /* print the contents of data */
+        console.log(data);
+      
+        /* Then split it by commas (to make it more readable) */
+        var dataArr = data.split(",");        
+      
+        /* Call/invoke my song function with dataArr[1] as argument */            
+        song(dataArr[1]); 
+        //movie(dataArr[1]);
       });
-
-
-    
-    }
-
-            
-
-
-
-        
-
-
-
-
-  
-
-
-
-  
-  
-
-
+    } /* function end */
