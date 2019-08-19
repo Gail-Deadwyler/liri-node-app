@@ -44,4 +44,4 @@ npm packages (axios, moment, dotenv, fs, node-spotify-api)
 According to the project specifications, I created the code, researched how to use the APIs and tested the functionality of this application.
 
 #Screenshots
-![movie-this default](movie-this-default.png)
+![movie-this default](movie-this default.png)
