@@ -53,13 +53,14 @@ switch (action) {
     /* If movie() is called... */
     function movie(movie) {
       input = movie;
-        var queryUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=trilogy";                
+      //console.log("input is " + input);
+        //var queryUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=trilogy";                
         
         /* if no movie title given.. display info for Mr Nobody */
         if (!input) {
             //var queryUrl = "http://www.omdbapi.com/?t=mr+nobody&y=&plot=short&apikey=trilogy";
             input = "Mr Nobody";            
-            queryUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=trilogy";
+            var queryUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=trilogy";
 
             axios
             .get(queryUrl)
@@ -94,8 +95,9 @@ switch (action) {
             }
             console.log(error.config);
         });
-        } /* end if statement */        
+        } /* end if statement */ 
         
+        else {
         /* Then run a request with axios to the OMDB API with the movie specified */        
         var queryUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=trilogy";
 
@@ -130,7 +132,8 @@ switch (action) {
             console.log("Error", error.message);
             }
             console.log(error.config);
-        });        
+        }); 
+        } /* end else statement */       
     } /* function end 
 
     /* If concert() is called */
