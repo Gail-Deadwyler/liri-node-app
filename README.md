@@ -44,9 +44,9 @@ npm packages (axios, moment, dotenv, fs, node-spotify-api)
 According to the project specifications, I created the code, researched how to use the APIs and tested the functionality of this application.
 
 ## Screenshots
-![movie-this default](https://github.com/Gail-Deadwyler/liri-node-app/blob/master/movie-this-default.PNG)  
-![movie-this](https://github.com/Gail-Deadwyler/liri-node-app/blob/master/movie-this.PNG)  
-![concert-this](https://github.com/Gail-Deadwyler/liri-node-app/blob/master/concert-this.PNG) 
-![spotify-this-song-default](https://github.com/Gail-Deadwyler/liri-node-app/blob/master/spotify-this-song-default.PNG)  
-![spotify-this-song](https://github.com/Gail-Deadwyler/liri-node-app/blob/master/spotify-this-song.PNG)  
-![do-what-it-says](https://github.com/Gail-Deadwyler/liri-node-app/blob/master/do-what-it-says.PNG)
+![movie-this default](movie-this-default.PNG)  
+![movie-this](movie-this.PNG)  
+![concert-this](concert-this.PNG) 
+![spotify-this-song-default](spotify-this-song-default.PNG)  
+![spotify-this-song](spotify-this-song.PNG)  
+![do-what-it-says](do-what-it-says.PNG)
